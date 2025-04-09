@@ -34,17 +34,17 @@ try:
     driver.get(url)
     wait = WebDriverWait(driver, 10)
 
-    # 航空券を検索する
-    search_button = wait.until(EC.element_to_be_clickable((By.ID, "ticket-search")))
     # TODO: 出発地、到着地は動的に変更できるようにする
     # 「出発地」・「到着地」を指定
     Select(driver.find_element(By.NAME, "from")).select_by_value("HND")
     Select(driver.find_element(By.NAME, "to")).select_by_value("SPK")
 
-    search_button.click()
+    # 航空券を検索する
+    wait.until(EC.element_to_be_clickable((By.ID, "ticket-search"))).click()
 
-    # HACK: webdriverwaitで待機する
-    time.sleep(5)  # 画面遷移待ち（適宜調整）
+    # 画面遷移待ち
+    wait.until(EC.title_is('便選択｜北海道発着の飛行機予約ならAIRDO（エア・ドゥ）'))
+
 
     # 予約する航空券を選択する
     # TODO: 条件に一致した航空券を選択できるようにする
