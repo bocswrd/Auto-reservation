@@ -9,8 +9,12 @@ from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.by import By
+from dotenv import load_dotenv
 
 import time
+import os
+
+load_dotenv()  # .env ファイルを読み込む
 
 # Chromeのオプション設定
 chrome_options = Options()
@@ -18,18 +22,21 @@ chrome_options = Options()
 chrome_options.headless = False  # これでブラウザが表示される
 chrome_options.add_argument("--no-sandbox")
 chrome_options.add_argument("--disable-dev-shm-usage")
+chrome_options.add_experimental_option("detach", True)  # ブラウザを閉じない
 
 # Chromeドライバーのセットアップ
 service = Service(ChromeDriverManager().install())
 driver = webdriver.Chrome(service=service, options=chrome_options)
+driver.maximize_window()
 
 url = "https://www.airdo.jp/"
 try:
     driver.get(url)
+    wait = WebDriverWait(driver, 10)
 
     # 航空券を検索する
-    wait = WebDriverWait(driver, 10)
     search_button = wait.until(EC.element_to_be_clickable((By.ID, "ticket-search")))
+    # TODO: 出発地、到着地は動的に変更できるようにする
     # 「出発地」・「到着地」を指定
     Select(driver.find_element(By.NAME, "from")).select_by_value("HND")
     Select(driver.find_element(By.NAME, "to")).select_by_value("SPK")
@@ -39,28 +46,29 @@ try:
     # HACK: webdriverwaitで待機する
     time.sleep(5)  # 画面遷移待ち（適宜調整）
 
-    # 遷移後のページの情報を取得
-    element = driver.find_element(By.XPATH, '//*[@id="tabSpS2"]/div/ul/li[9]')
-    print(element.get_attribute("textContent"))
-    print(element.text)
-    # クリック前のクラスを取得
-    before_class = element.get_attribute("class")
-    print(f"クリック前: {before_class}")
+    # 予約する航空券を選択する
+    # TODO: 条件に一致した航空券を選択できるようにする
+    driver.find_element(By.XPATH, '//*[@id="tabS2"]/div[2]/div[1]/div/div/table/tbody/tr[1]/td/div/div[1]').click()
+    wait.until(EC.element_to_be_clickable((By.XPATH, "//*[@id='form-cart']/div/button[1]"))).click()
+    driver.find_element(By.XPATH, "//div[@id='main']/article/div/div[5]/div/div/form/div/button").click()
 
-    # クリックを実行
-    # element.click()
-    # driver.execute_script("arguments[0].click();", element)
-    actions = ActionChains(driver)
-    actions.move_to_element(element).click().perform()
-    driver.execute_script("document.querySelector('.rsv-select .table-calendar td:not(.select-disable), .list-calendar li:not(.select-disable)').click();")
+    # お客様情報入力
+    driver.find_element(By.ID, "lastName1").send_keys(os.getenv('LAST_NAME'))
+    driver.find_element(By.ID, "FirstName1").send_keys(os.getenv('FIRST_NAME'))
+    driver.find_element(By.ID, "age-1").send_keys(os.getenv('AGE'))
+    driver.find_element(By.ID, "input-mail-req").send_keys(os.getenv('E_MAIL'))
+    driver.find_element(By.ID, 'input-conf-req').send_keys(os.getenv('E_MAIL'))
+    driver.find_element(By.ID, 'telNumber').send_keys(os.getenv('TEL_NUMBER'))
+    driver.find_element(By.XPATH, "//button[@type='submit']").click()
 
-    # クリック後のクラスを取得
-    after_class = element.get_attribute("class")
-    print(f"クリック後: {after_class}")
-
-
-    button = driver.find_element(By.CSS_SELECTOR, "#form-cart button[type='submit']")
-    button.click()
+    # チェックボタン押下
+    wait.until(
+        EC.element_to_be_clickable((By.CSS_SELECTOR, 'label.baggage-check-label'))
+    ).click()
+    # TODO: チェックボックスを活性化させた後に処理を行う
+    # 予約を確定する
+    driver.find_element(By.NAME, 'reservation').click()
+    
 
 finally:
     driver.quit()
