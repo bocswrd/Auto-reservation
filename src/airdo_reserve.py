@@ -51,9 +51,7 @@ try:
         By.XPATH,
         '//*[@id="tabS2"]/div[2]/div[1]/div/div/table/tbody/tr[1]/td/div/div[1]',
     ).click()
-    wait.until(
-        EC.element_to_be_clickable((By.XPATH, "//*[@id='form-cart']/div/button[1]"))
-    ).click()
+    wait.until(EC.element_to_be_clickable((By.XPATH, "//*[@id='form-cart']/div/button[1]"))).click()
     driver.find_element(
         By.XPATH, "//div[@id='main']/article/div/div[5]/div/div/form/div/button"
     ).click()
@@ -68,9 +66,7 @@ try:
     driver.find_element(By.XPATH, "//button[@type='submit']").click()
 
     # チェックボタン押下
-    wait.until(
-        EC.element_to_be_clickable((By.CSS_SELECTOR, "label.baggage-check-label"))
-    ).click()
+    wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "label.baggage-check-label"))).click()
     # TODO: チェックボックスを活性化させた後に処理を行う
     # 予約を確定する
     driver.find_element(By.NAME, "reservation").click()
