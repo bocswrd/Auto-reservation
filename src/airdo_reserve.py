@@ -10,6 +10,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.by import By
 from dotenv import load_dotenv
+from pages.InputCustomerInfoPage import InputCustomerInfoPage
 
 import time
 import os
@@ -56,21 +57,26 @@ try:
         By.XPATH, "//div[@id='main']/article/div/div[5]/div/div/form/div/button"
     ).click()
 
+    # 画面遷移待ち
+    wait.until(EC.title_is("お客様情報入力｜北海道発着の飛行機予約ならAIRDO（エア・ドゥ）"))
     # お客様情報入力
-    driver.find_element(By.ID, "lastName1").send_keys(os.getenv("LAST_NAME"))
-    driver.find_element(By.ID, "FirstName1").send_keys(os.getenv("FIRST_NAME"))
-    driver.find_element(By.ID, "age-1").send_keys(os.getenv("AGE"))
-    driver.find_element(By.ID, "input-mail-req").send_keys(os.getenv("E_MAIL"))
-    driver.find_element(By.ID, "input-conf-req").send_keys(os.getenv("E_MAIL"))
-    driver.find_element(By.ID, "telNumber").send_keys(os.getenv("TEL_NUMBER"))
-    driver.find_element(By.XPATH, "//button[@type='submit']").click()
+    input_customer_info_page = InputCustomerInfoPage(driver)
+    input_customer_info_page.set_reservationInfo(
+        os.getenv("FIRST_NAME"),
+        os.getenv("LAST_NAME"),
+        os.getenv("AGE"),
+        os.getenv("E_MAIL"),
+        os.getenv("TEL_NUMBER"),
+    )
+    input_customer_info_page.click_submit()
 
     # チェックボタン押下
     wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "label.baggage-check-label"))).click()
     # TODO: チェックボックスを活性化させた後に処理を行う
     # 予約を確定する
-    driver.find_element(By.NAME, "reservation").click()
+    # driver.find_element(By.NAME, "reservation").click()
 
 
 finally:
-    driver.quit()
+    print("処理が完了しました。")
+    # driver.quit()
