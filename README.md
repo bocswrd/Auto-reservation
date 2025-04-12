@@ -8,13 +8,7 @@
 ### 概要
 1. Pythonをインストールする
 1. Chromeをインストールする
-1. 仮想環境を有効化する
 1. パッケージをインストールする
-
-### 仮想環境のアクティベート
-``` bash
-source .venv/Scripts/activate
-```
 
 ### パッケージのインストール方法
 ``` bash
@@ -36,6 +30,10 @@ pip freeze > requirements.txt
 ## 依存関係
 
 ## トラブルシューティング
+### 仮想環境が有効にならない場合
+``` bash
+source .venv/Scripts/activate
+```
 
 ## 貢献
 
