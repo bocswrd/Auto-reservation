@@ -6,7 +6,7 @@ updates:
       interval: "weekly"
       day: "saturday"
       time: "03:00"
-      timezone: "JST"
+      timezone: "Asia/Tokyo"
     commit-message:
       prefix: "chore"
       include: "scope"
