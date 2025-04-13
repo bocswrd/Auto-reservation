@@ -19,22 +19,26 @@
 1. Pythonをインストールする
 1. Chromeをインストールする
 1. [ブラウザのインストール(Playwright)](#ブラウザのインストール方法playwright)
-1. [仮想環境を作成する](#仮想環境の作成方法)
-1. [パッケージをインストールする](#パッケージのインストール方法)
+1. [Visual Studio Code拡張機能をインストールする](#visual-studio-code拡張機能をインストールする)
+1. [仮想環境を作成し、ライブラリをインストールする](#仮想環境を作成しライブラリをインストールする)
 
-### ブラウザのインストール方法(Playwright)
+### Visual Studio Code拡張機能をインストールする
+ - Python
+ - Black Formatter
+ - Flack8
+
+
+### 仮想環境を作成し、ライブラリをインストールする
+vs codeを開き、Git Bashで以下コマンドを実行する
 ``` bash
-playwright install
+deactivate  # 仮想環境のディアクティベート
 ```
 
-### 仮想環境の作成方法
 ``` bash
-python -m venv .venv
-```
-
-### パッケージのインストール方法
-``` bash
-pip install -r requirements.txt
+rm -rf .venv/  # 仮想環境を削除
+python -m venv .venv    # 仮想環境を再作成
+source .venv/Scripts/activate
+pip install -r requirements.txt # ライブラリをインストール
 ```
 
 ## 使用方法
