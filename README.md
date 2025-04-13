@@ -18,8 +18,14 @@
 ### 概要
 1. Pythonをインストールする
 1. Chromeをインストールする
+1. [ブラウザのインストール(Playwright)](#ブラウザのインストール方法playwright)
 1. [Visual Studio Code拡張機能をインストールする](#visual-studio-code拡張機能をインストールする)
 1. [仮想環境を作成し、ライブラリをインストールする](#仮想環境を作成しライブラリをインストールする)
+
+### ブラウザのインストール方法(Playwright)
+``` bash
+playwright install
+```
 
 ### Visual Studio Code拡張機能をインストールする
  - Python
@@ -48,6 +54,11 @@ python airdo_reserve.py
 ### インストール済みバッケージ・バージョンの出力
 ``` bash
 pip freeze > requirements.txt
+```
+
+### codegenを用いたスクリプトの生成(Playwright)
+``` bash
+Playwright codegen {操作対象URL} -o {出力ファイル名.py}
 ```
 
 ## 構成
