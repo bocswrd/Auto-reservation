@@ -17,7 +17,7 @@ PySocks==1.7.1
 pytest==8.3.5
 pytest-base-url==2.1.0
 pytest-playwright==0.7.0
-python-dotenv==1.0.1
+python-dotenv==1.1.0
 python-slugify==8.0.4
 requests==2.32.3
 selenium==4.31.0
