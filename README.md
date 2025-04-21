@@ -36,7 +36,7 @@ playwright install
 ### 仮想環境の構築
 vs codeを開き、Git Bashで以下コマンドを実行する
 ``` bash
-sh update_library.sh
+source update_library.sh 
 ```
 
 ## 使用方法
