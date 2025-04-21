@@ -20,7 +20,7 @@
 1. Chromeをインストールする
 1. [ブラウザのインストール(Playwright)](#ブラウザのインストール方法playwright)
 1. [Visual Studio Code拡張機能をインストールする](#visual-studio-code拡張機能をインストールする)
-1. [仮想環境を作成し、ライブラリをインストールする](#仮想環境を作成しライブラリをインストールする)
+1. [仮想環境の構築](#仮想環境の構築)
 
 ### ブラウザのインストール方法(Playwright)
 ``` bash
@@ -33,17 +33,10 @@ playwright install
  - Flack8
 
 
-### 仮想環境を作成し、ライブラリをインストールする
+### 仮想環境の構築
 vs codeを開き、Git Bashで以下コマンドを実行する
 ``` bash
-deactivate  # 仮想環境のディアクティベート
-```
-
-``` bash
-rm -rf .venv/  # 仮想環境を削除
-python -m venv .venv    # 仮想環境を再作成
-source .venv/Scripts/activate
-pip install -r requirements.txt # ライブラリをインストール
+sh update_library.sh
 ```
 
 ## 使用方法
