@@ -2,6 +2,8 @@ import os
 import re
 import time
 from pages.ReservationFormPage import ReservationFormPage
+from pages.FlightSelectionPage import FlightSelectionPage
+from enums.FlightDirection import FlightDirection
 from dotenv import load_dotenv
 from playwright.sync_api import Playwright, sync_playwright, expect
 
@@ -19,14 +21,40 @@ def run(playwright: Playwright) -> None:
     # Airdoの予約サイトにアクセス
     page.goto("https://www.airdo.jp/")
     # 航空券を検索
-    page.locator('select[name="from"]').select_option("HND")
+    # 出発地・目的の選択
+    page.locator('select[name="from"]').select_option(
+        os.getenv("DEPARTURE_AIRPORT")
+    )
+    page.locator('select[name="to"]').select_option(
+        os.getenv("ARRIVAL_AIRPORT")
+    )
+    # 日付指定
+    page.evaluate(
+        f"""
+        document.querySelector('input[type="hidden"][name="departureDate"]').value = '{os.getenv("DEPARTURE_DATE")}';
+        """
+    )
+    page.evaluate(
+        f"""
+        document.querySelector('input[type="hidden"][name="returnDate"]').value = '{os.getenv("RETURN_DATE")}';
+        """
+    )
     page.get_by_role("button", name="検索する").click()
-    # 検索結果から航空券を選択
-    # page.get_by_role("row", name="ADO 011 763 06:55 - 08:25 ◯ ¥").get_by_role(
-    #     "cell"
-    # ).nth(1).click()
-    page.get_by_role("cell", name="△ ¥26,320").click()
-    page.locator("#form-cart").get_by_role("button", name="次へ").click()
+
+    # 航空券を選択する
+    flight_selection_page = FlightSelectionPage(page)
+    flight_selection_page.select_cheapest_flight(
+        *flight_selection_page.find_cheapest_flight(
+            flight_selection_page.get_flight_prices(FlightDirection.OUTBOUND)
+        )
+    )
+    flight_selection_page.select_cheapest_flight(
+        *flight_selection_page.find_cheapest_flight(
+            flight_selection_page.get_flight_prices(FlightDirection.RETURN)
+        )
+    )
+    flight_selection_page.buy_flight()
+
     page.get_by_role("button", name="ログインせずに次へ進む").click()
     # 予約者情報の入力
     reservation_form_page = ReservationFormPage(page)
