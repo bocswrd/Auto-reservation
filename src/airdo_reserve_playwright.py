@@ -45,16 +45,12 @@ def run(playwright: Playwright) -> None:
     flight_selection_page = FlightSelectionPage(page)
     flight_selection_page.select_cheapest_flight(
         *flight_selection_page.find_cheapest_flight(
-            flight_selection_page.get_flight_prices(
-                FlightDirection.OUTBOUND
-            )
+            flight_selection_page.get_flight_prices(FlightDirection.OUTBOUND)
         )
     )
     flight_selection_page.select_cheapest_flight(
         *flight_selection_page.find_cheapest_flight(
-            flight_selection_page.get_flight_prices(
-                FlightDirection.RETURN
-            )
+            flight_selection_page.get_flight_prices(FlightDirection.RETURN)
         )
     )
     flight_selection_page.buy_flight()
