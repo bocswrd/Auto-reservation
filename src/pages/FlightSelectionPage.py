@@ -1,0 +1,107 @@
+import re
+from playwright.sync_api import Page
+
+
+class FlightSelectionPage:
+
+    __FRAME_URL_ID = "select.html"
+    outward_flight_selector = "#anc-s1"
+    homeward_flight_selector = "#anc-s2"
+
+    def __init__(self, page: Page):
+        self.page = page
+        self.frame = self.get_target_frame()
+
+    def get_target_frame(self):
+        """
+        航空券情報を取得するためのiframeを取得する
+
+        Raises:
+            Exception: iframeが見つからない場合
+            Exception: 目的のiframeが見つからない場合
+
+        Returns:
+            _type_: 航空券情報を取得するためのiframe
+        """
+        frames = self.page.frames
+        if len(frames) == 0:
+            raise Exception("No frames found")
+
+        for frame in frames:
+            if self.__FRAME_URL_ID in frame.url:
+                return frame
+
+        raise Exception("No target frame found")
+
+    def get_flight_prices(self, direction_selector):
+        """
+        フライト情報と価格を取得する
+
+        Args:
+            direction_selector(enums.FlightDirection): 往復路のセレクター
+
+        Returns:
+            dict: フライト情報と価格の辞書
+        """
+        outward_flight = self.frame.wait_for_selector(direction_selector.value)
+        outward_flight_DoValue = outward_flight.wait_for_selector(
+            "div.tab-content.current"
+        )
+
+        flights = outward_flight_DoValue.query_selector_all("tr")
+        flight_prices = {}
+        for flight in flights:
+            flight_name_element = flight.query_selector("div.flight")
+            if not flight_name_element:
+                continue
+            flight_name = flight_name_element.inner_text().strip()
+
+            price_elements = flight.query_selector_all("div.price")
+            for price_element in price_elements:
+                price_text = price_element.inner_text().strip()
+                if re.match(r"¥[\d,]+", price_text):
+                    price = int(price_text.replace("¥", "").replace(",", ""))
+                    if flight_name not in flight_prices:
+                        flight_prices[flight_name] = []
+                    flight_prices[flight_name].append(price)
+
+        return flight_prices
+
+    def find_cheapest_flight(self, flight_prices):
+        """
+        最安値のフライトを探す
+
+        Args:
+            flight_prices (dict): フライト情報と価格の辞書
+
+        Returns:
+            dict: 便名と価格の辞書
+        """
+        cheapest_flight = None
+        cheapest_price = float("inf")
+
+        for flight, prices in flight_prices.items():
+            min_price = min(prices)
+            if min_price < cheapest_price:
+                cheapest_price = min_price
+                cheapest_flight = flight
+
+        return cheapest_flight, cheapest_price
+
+    def select_cheapest_flight(self, cheapest_flight, cheapest_price):
+        """
+        最安値のフライトを選択する
+
+        Args:
+                cheapest_flight (str): 最安値のフライト名
+                cheapest_price (int): 最安値の価格
+        """
+        self.page.get_by_role("row", name=cheapest_flight).get_by_role(
+            "cell", name=f"¥{cheapest_price:,}"
+        ).click()
+
+    def buy_flight(self):
+        """フライトを購入する"""
+        self.page.locator("#form-cart").get_by_role(
+            "button", name="次へ"
+        ).click()
