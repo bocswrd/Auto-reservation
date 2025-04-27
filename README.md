@@ -1,24 +1,42 @@
 # プロジェクトタイトル
 
 ## プロジェクトの説明
+航空券の予約を自動で行うツール
 
 ## 目次
+ - [環境構築手順](#環境構築手順)
+ - [使用方法](#使用方法)
+ - [構成](#構成)
+ - [依存関係](#依存関係)
+ - [トラブルシューティング](#トラブルシューティング)
+ - [貢献](#貢献)
+ - [教訓](#教訓)
+ - [ライセンス](#ライセンス)
+ - [連絡先](#連絡先)
 
 ## 環境構築手順
 ### 概要
 1. Pythonをインストールする
 1. Chromeをインストールする
-1. 仮想環境を有効化する
-1. パッケージをインストールする
+1. [ブラウザのインストール(Playwright)](#ブラウザのインストール方法playwright)
+1. [Visual Studio Code拡張機能をインストールする](#visual-studio-code拡張機能をインストールする)
+1. [仮想環境の構築](#仮想環境の構築)
 
-### 仮想環境のアクティベート
+### ブラウザのインストール方法(Playwright)
 ``` bash
-source .venv/Scripts/activate
+playwright install
 ```
 
-### パッケージのインストール方法
+### Visual Studio Code拡張機能をインストールする
+ - Python
+ - Black Formatter
+ - Flack8
+
+
+### 仮想環境の構築
+vs codeを開き、Git Bashで以下コマンドを実行する
 ``` bash
-pip install -r requirements.txt
+source update_library.sh 
 ```
 
 ## 使用方法
@@ -31,11 +49,20 @@ python airdo_reserve.py
 pip freeze > requirements.txt
 ```
 
+### codegenを用いたスクリプトの生成(Playwright)
+``` bash
+Playwright codegen {操作対象URL} -o {出力ファイル名.py}
+```
+
 ## 構成
 
 ## 依存関係
 
 ## トラブルシューティング
+### 仮想環境が有効にならない場合
+``` bash
+source .venv/Scripts/activate
+```
 
 ## 貢献
 
