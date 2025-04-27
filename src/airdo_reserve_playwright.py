@@ -21,13 +21,24 @@ def run(playwright: Playwright) -> None:
     # Airdoの予約サイトにアクセス
     page.goto("https://www.airdo.jp/")
     # 航空券を検索
-    # TODO: 出発地・目的の選択
-    page.locator('select[name="from"]').select_option("HND")
-    # TODO: 日付指定
-    page.locator("#date-out").click()
-    page.locator(
-        "div:nth-child(2) > .fc-view-container > .fc-view > table > .fc-body > tr > td > .fc-scroller > .fc-day-grid > div > .fc-content-skeleton > table > thead > tr > td:nth-child(6)"
-    ).first.click()
+    # 出発地・目的の選択
+    page.locator('select[name="from"]').select_option(
+        os.getenv("DEPARTURE_AIRPORT")
+    )
+    page.locator('select[name="to"]').select_option(
+        os.getenv("ARRIVAL_AIRPORT")
+    )
+    # 日付指定
+    page.evaluate(
+        f"""
+        document.querySelector('input[type="hidden"][name="departureDate"]').value = '{os.getenv("DEPARTURE_DATE")}';
+        """
+    )
+    page.evaluate(
+        f"""
+        document.querySelector('input[type="hidden"][name="returnDate"]').value = '{os.getenv("RETURN_DATE")}';
+        """
+    )
     page.get_by_role("button", name="検索する").click()
 
     # 航空券を選択する
