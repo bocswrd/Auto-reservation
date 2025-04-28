@@ -17,27 +17,19 @@
 ## 環境構築手順
 ### 概要
 1. Pythonをインストールする
-1. [仮想環境の構築](#仮想環境の構築)
-1. [ブラウザのインストール](#ブラウザのインストール方法)
-1. [Visual Studio Code拡張機能をインストールする](#visual-studio-code拡張機能をインストールする)
+1. Visual Studio Codeをインストールする
+1. Git Bashをインストールする
+1. [Visual Studio Code内の環境構築](#初回セットアップ用shellを起動する)
+    1. 仮想環境の構築
+    1. ブラウザのインストール
+    1. 拡張機能をインストールする
 
-### 仮想環境の構築
-1. Visual Studio Codeを開く
-2. Git Bashで以下コマンドを実行する
+### Visual Studio Code内の環境構築
+#### 初回セットアップ用Shellを起動する
+* 以下コマンドを実行する
 ``` bash
-cd "$(git rev-parse --show-toplevel)"
-source update_library.sh
+source initial_setup.sh
 ```
-
-### ブラウザのインストール方法
-``` bash
-playwright install
-```
-
-### Visual Studio Code拡張機能をインストールする
- - Python
- - Black Formatter
- - Flack8
 
 ## 使用方法
 ### 実行コマンド
