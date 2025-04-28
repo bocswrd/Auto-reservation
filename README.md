@@ -17,12 +17,19 @@
 ## 環境構築手順
 ### 概要
 1. Pythonをインストールする
-1. Chromeをインストールする
-1. [ブラウザのインストール(Playwright)](#ブラウザのインストール方法playwright)
-1. [Visual Studio Code拡張機能をインストールする](#visual-studio-code拡張機能をインストールする)
 1. [仮想環境の構築](#仮想環境の構築)
+1. [ブラウザのインストール](#ブラウザのインストール方法)
+1. [Visual Studio Code拡張機能をインストールする](#visual-studio-code拡張機能をインストールする)
 
-### ブラウザのインストール方法(Playwright)
+### 仮想環境の構築
+1. Visual Studio Codeを開く
+2. Git Bashで以下コマンドを実行する
+``` bash
+cd "$(git rev-parse --show-toplevel)"
+source update_library.sh
+```
+
+### ブラウザのインストール方法
 ``` bash
 playwright install
 ```
@@ -32,18 +39,19 @@ playwright install
  - Black Formatter
  - Flack8
 
-
-### 仮想環境の構築
-vs codeを開き、Git Bashで以下コマンドを実行する
-``` bash
-source update_library.sh 
-```
-
 ## 使用方法
 ### 実行コマンド
 ``` bash
-python airdo_reserve.py
+python airdo_reserve_playwright.py
 ```
+
+### パッケージの更新
+以下コマンドを実行する
+``` bash
+cd "$(git rev-parse --show-toplevel)"
+source update_library.sh 
+```
+
 ### インストール済みバッケージ・バージョンの出力
 ``` bash
 pip freeze > requirements.txt
@@ -61,6 +69,7 @@ Playwright codegen {操作対象URL} -o {出力ファイル名.py}
 ## トラブルシューティング
 ### 仮想環境が有効にならない場合
 ``` bash
+cd "$(git rev-parse --show-toplevel)"
 source .venv/Scripts/activate
 ```
 
