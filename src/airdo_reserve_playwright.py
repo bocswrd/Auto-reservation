@@ -1,11 +1,10 @@
 import os
-import re
 import time
 from pages.ReservationFormPage import ReservationFormPage
 from pages.FlightSelectionPage import FlightSelectionPage
 from enums.FlightDirection import FlightDirection
 from dotenv import load_dotenv
-from playwright.sync_api import Playwright, sync_playwright, expect
+from playwright.sync_api import Playwright, sync_playwright
 
 
 def run(playwright: Playwright) -> None:
