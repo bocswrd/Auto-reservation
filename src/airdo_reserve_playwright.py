@@ -5,6 +5,7 @@ from pages.FlightSelectionPage import FlightSelectionPage
 from enums.FlightDirection import FlightDirection
 from dotenv import load_dotenv
 from playwright.sync_api import Playwright, sync_playwright
+from datetime import datetime
 
 
 def run(playwright: Playwright) -> None:
@@ -73,7 +74,10 @@ def run(playwright: Playwright) -> None:
         page.screenshot(path="screenshot.png", full_page=True)
         # page.get_by_role("button", name="予約する").click()
     except Exception as e:
-        page.screenshot(path="screenshot.png", full_page=True)
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        page.screenshot(
+            path=f"fails-screenshot-{timestamp}.png", full_page=True
+        )
         print(f"An error occurred: {e}")
 
 
