@@ -33,10 +33,6 @@ def run(playwright: Playwright) -> None:
         page.evaluate(
             f"""
             document.querySelector('input[type="hidden"][name="departureDate"]').value = '{os.getenv("DEPARTURE_DATE")}';
-            """
-        )
-        page.evaluate(
-            f"""
             document.querySelector('input[type="hidden"][name="returnDate"]').value = '{os.getenv("RETURN_DATE")}';
             """
         )
@@ -83,7 +79,7 @@ def run(playwright: Playwright) -> None:
 
 start = time.time()
 
-load_dotenv()
+load_dotenv(override=True)
 
 with sync_playwright() as playwright:
     run(playwright)
