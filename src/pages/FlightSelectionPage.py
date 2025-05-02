@@ -122,6 +122,8 @@ class FlightSelectionPage:
                 cheapest_flight (str): 最安値のフライト名
                 cheapest_price (int): 最安値の価格
         """
+        # HACK: 便名を指定する必要がある
+        self.page.wait_for_selector(f"text=¥{cheapest_price:,}")
         self.page.get_by_role("row", name=cheapest_flight).get_by_role(
             "cell", name=f"¥{cheapest_price:,}"
         ).click()
