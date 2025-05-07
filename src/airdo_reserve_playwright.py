@@ -87,15 +87,16 @@ def run(playwright: Playwright) -> None:
         page.screenshot(
             path=f"fails-screenshot-{timestamp}.png", full_page=True
         )
-        print(f"An error occurred: {e}")
+        raise e
 
 
-start = time.time()
+if __name__ == "__main__":
+    start = time.time()
 
-load_dotenv(override=True)
+    load_dotenv(override=True)
 
-with sync_playwright() as playwright:
-    run(playwright)
+    with sync_playwright() as playwright:
+        run(playwright)
 
-end = time.time()
-print(f"実行時間: {end - start:.4f} 秒")
+    end = time.time()
+    print(f"実行時間: {end - start:.4f} 秒")
