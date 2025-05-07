@@ -54,6 +54,11 @@ pip freeze > requirements.txt
 Playwright codegen {操作対象URL} -o {出力ファイル名.py}
 ```
 
+### テスト実行(pytest)
+``` bash
+pytest {実行ファイル名}.py
+```
+
 ## 構成
 
 ## 依存関係
