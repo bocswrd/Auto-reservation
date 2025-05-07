@@ -33,10 +33,6 @@ def run(playwright: Playwright) -> None:
         page.evaluate(
             f"""
             document.querySelector('input[type="hidden"][name="departureDate"]').value = '{os.getenv("DEPARTURE_DATE")}';
-            """
-        )
-        page.evaluate(
-            f"""
             document.querySelector('input[type="hidden"][name="returnDate"]').value = '{os.getenv("RETURN_DATE")}';
             """
         )
@@ -44,18 +40,31 @@ def run(playwright: Playwright) -> None:
 
         # 航空券を選択する
         flight_selection_page = FlightSelectionPage(page)
-        flight_selection_page.select_cheapest_flight(
-            *flight_selection_page.find_cheapest_flight(
-                flight_selection_page.get_flight_prices(
-                    FlightDirection.OUTBOUND
-                )
+        cheapest_outbound_flight = flight_selection_page.find_cheapest_flight(
+            flight_selection_page.get_flight_prices(
+                FlightDirection.OUTBOUND,
+                int(os.getenv("OUTBOUND_TAKEOFF_HOUR")),
+                int(os.getenv("OUTBOUND_TAKEOFF_MINUTE")),
+                int(os.getenv("OUTBOUND_LANDING_HOUR")),
+                int(os.getenv("OUTBOUND_LANDING_MINUTE")),
             )
         )
-        flight_selection_page.select_cheapest_flight(
-            *flight_selection_page.find_cheapest_flight(
-                flight_selection_page.get_flight_prices(FlightDirection.RETURN)
+        if cheapest_outbound_flight is None:
+            raise ValueError("往路のフライトが見つかりませんでした。")
+        flight_selection_page.select_cheapest_flight(*cheapest_outbound_flight)
+
+        cheapest_return_flight = flight_selection_page.find_cheapest_flight(
+            flight_selection_page.get_flight_prices(
+                FlightDirection.RETURN,
+                int(os.getenv("RETURN_TAKEOFF_HOUR")),
+                int(os.getenv("RETURN_TAKEOFF_MINUTE")),
+                int(os.getenv("RETURN_LANDING_HOUR")),
+                int(os.getenv("RETURN_LANDING_MINUTE")),
             )
         )
+        if cheapest_return_flight is None:
+            raise ValueError("復路のフライトが見つかりませんでした。")
+        flight_selection_page.select_cheapest_flight(*cheapest_return_flight)
         flight_selection_page.buy_flight()
 
         page.get_by_role("button", name="ログインせずに次へ進む").click()
@@ -83,7 +92,7 @@ def run(playwright: Playwright) -> None:
 
 start = time.time()
 
-load_dotenv()
+load_dotenv(override=True)
 
 with sync_playwright() as playwright:
     run(playwright)
