@@ -1,5 +1,6 @@
 import re
 from playwright.sync_api import Page
+from datetime import datetime, time
 
 
 class FlightSelectionPage:
@@ -33,7 +34,14 @@ class FlightSelectionPage:
 
         raise Exception("No target frame found")
 
-    def get_flight_prices(self, direction_selector):
+    def get_flight_prices(
+        self,
+        direction_selector,
+        takeoff_hour,
+        takeoff_minute,
+        landing_hour,
+        landing_minute,
+    ):
         """
         フライト情報と価格を取得する
 
@@ -51,6 +59,24 @@ class FlightSelectionPage:
         flights = outward_flight_DoValue.query_selector_all("tr")
         flight_prices = {}
         for flight in flights:
+            flight_time_element = flight.query_selector("div.time")
+            if not flight_time_element:
+                continue
+            flight_time_text = flight_time_element.inner_text().strip()
+            flight_times = flight_time_text.split(" - ")
+            takeoff_time = datetime.strptime(flight_times[0], "%H:%M").time()
+            landing_time = datetime.strptime(flight_times[1], "%H:%M").time()
+
+            # 指定時間外のフライト情報は取得しない
+            if (
+                takeoff_time < time(takeoff_hour, takeoff_minute, 0)
+                or time(landing_hour, landing_minute, 0) < landing_time
+            ):
+                continue
+
+            if flight_time_element.inner_text().strip() == "":
+                continue
+
             flight_name_element = flight.query_selector("div.flight")
             if not flight_name_element:
                 continue
@@ -96,6 +122,8 @@ class FlightSelectionPage:
                 cheapest_flight (str): 最安値のフライト名
                 cheapest_price (int): 最安値の価格
         """
+        # HACK: 便名を指定する必要がある
+        self.page.wait_for_selector(f"text=¥{cheapest_price:,}")
         self.page.get_by_role("row", name=cheapest_flight).get_by_role(
             "cell", name=f"¥{cheapest_price:,}"
         ).click()
