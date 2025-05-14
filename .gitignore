@@ -3,3 +3,6 @@ __pycache__/
 *.pyc
 # Python virtual environment
 .venv
+# build関連
+build/
+dist/
