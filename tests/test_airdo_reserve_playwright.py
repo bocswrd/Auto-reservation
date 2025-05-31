@@ -18,8 +18,8 @@ def playwright_instance():
     {
         "DEPARTURE_AIRPORT": "HND",
         "ARRIVAL_AIRPORT": "SPK",
-        "DEPARTURE_DATE": "2025-05-10",
-        "RETURN_DATE": "2025-05-15",
+        "DEPARTURE_DATE": "2025-07-10",
+        "RETURN_DATE": "2025-07-15",
         "OUTBOUND_TAKEOFF_HOUR": "6",
         "OUTBOUND_TAKEOFF_MINUTE": "0",
         "OUTBOUND_LANDING_HOUR": "8",
