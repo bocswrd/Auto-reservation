@@ -59,6 +59,11 @@ Playwright codegen {操作対象URL} -o {出力ファイル名.py}
 pytest {実行ファイル名}.py
 ```
 
+### exeファイルのビルド
+``` bash
+./build.sh
+```
+
 ## 構成
 
 ## 依存関係
@@ -69,6 +74,13 @@ pytest {実行ファイル名}.py
 cd "$(git rev-parse --show-toplevel)"
 source .venv/Scripts/activate
 ```
+
+### exe実行時、以下のエラーが出る場合
+``` bash
+playwright._impl._errors.Error: BrowserType.launch: Executable doesn't exist
+```
+ 1. Chromeをダウンロードする
+ 2. `C:\Program Files\Google\Chrome\Application`に`chrome.exe`が存在することを確認する
 
 ## 貢献
 
