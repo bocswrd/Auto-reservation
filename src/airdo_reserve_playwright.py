@@ -1,5 +1,5 @@
 import os
-import time
+import sys
 from pages.ReservationFormPage import ReservationFormPage
 from pages.FlightSelectionPage import FlightSelectionPage
 from enums.FlightDirection import FlightDirection
@@ -15,7 +15,10 @@ def run(playwright: Playwright) -> None:
     Args:
         playwright (Playwright): Playwrightのインスタンス
     """
-    browser = playwright.chromium.launch(headless=True)
+    browser = playwright.chromium.launch(
+        headless=True,
+        executable_path=get_browser_executable_path(),
+    )
     context = browser.new_context()
     page = context.new_page()
     try:
@@ -98,5 +101,18 @@ def reserve() -> None:
     with sync_playwright() as playwright:
         run(playwright)
 
-    end = time.time()
-    print(f"実行時間: {end - start:.4f} 秒")
+
+def get_browser_executable_path():
+    """
+    exe実行時に、ブラウザの実行ファイルパスを取得する関数
+
+    Returns:
+        str: ブラウザの実行ファイルパス
+         - exe実行時は指定、通常のPython実行時はNone
+    """
+    if getattr(sys, "frozen", False):
+        # exe実行時（PyInstaller実行環境）
+        return "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
+    else:
+        # 開発環境（通常のPython実行時）
+        return None  # None指定でplaywrightが通常のdriverを自動使用
