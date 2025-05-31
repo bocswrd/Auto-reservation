@@ -90,11 +90,11 @@ def run(playwright: Playwright) -> None:
         raise e
 
 
-if __name__ == "__main__":
-    start = time.time()
-
+def reserve() -> None:
+    """
+    予約を実行する関数
+    """
     load_dotenv(override=True)
-
     with sync_playwright() as playwright:
         run(playwright)
 
