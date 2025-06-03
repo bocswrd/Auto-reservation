@@ -13,7 +13,7 @@ cd "$(git rev-parse --show-toplevel)"
 blue "Start initial setup"
 
 # 仮想環境の構築
-source update_library.sh
+poetry install
 
 # ブラウザをインストールする
 blue "Installing browser..."
