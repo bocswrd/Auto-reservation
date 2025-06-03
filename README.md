@@ -19,10 +19,28 @@
 1. Pythonをインストールする
 1. Visual Studio Codeをインストールする
 1. Git Bashをインストールする
+1. [poetryをインストールする](#poetryのインストール手順)
 1. [Visual Studio Code内の環境構築](#初回セットアップ用shellを起動する)
     1. 仮想環境の構築
     1. ブラウザのインストール
     1. 拡張機能をインストールする
+
+### [poetryのインストール手順](https://python-poetry.org/docs/#installing-with-the-official-installer)
+Powershellを起動する
+``` powershell
+(Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | py -
+```
+``` powershell
+[Environment]::SetEnvironmentVariable("Path", [Environment]::GetEnvironmentVariable("Path", "User") + ";C:\Users\$env:USERNAME\AppData\Roaming\Python\Scripts", "User")
+```
+Powershellを再起動する
+``` powershell
+Start-Process powershell; exit
+```
+以下のコマンドを実行し、`poetry`のバージョンが表示されたらインストール完了
+``` powershell
+poetry --version
+```
 
 ### Visual Studio Code内の環境構築
 #### 初回セットアップ用Shellを起動する
@@ -34,19 +52,12 @@ source initial_setup.sh
 ## 使用方法
 ### 実行コマンド
 ``` bash
-python airdo_reserve_playwright.py
+poetry python main.py
 ```
 
 ### パッケージの更新
-以下コマンドを実行する
 ``` bash
-cd "$(git rev-parse --show-toplevel)"
-source update_library.sh 
-```
-
-### インストール済みバッケージ・バージョンの出力
-``` bash
-pip freeze > requirements.txt
+poetry install
 ```
 
 ### codegenを用いたスクリプトの生成(Playwright)
@@ -56,7 +67,7 @@ Playwright codegen {操作対象URL} -o {出力ファイル名.py}
 
 ### テスト実行(pytest)
 ``` bash
-pytest {実行ファイル名}.py
+poetry pytest {実行ファイル名}.py
 ```
 
 ### exeファイルのビルド
@@ -69,10 +80,12 @@ pytest {実行ファイル名}.py
 ## 依存関係
 
 ## トラブルシューティング
-### 仮想環境が有効にならない場合
+### venvディレクトリがプロジェクト配下に作成されない場合
+以下コマンドを実行する
 ``` bash
-cd "$(git rev-parse --show-toplevel)"
-source .venv/Scripts/activate
+rm -rf "$(poetry env info --path)"
+poetry config virtualenvs.in-project true
+poetry install
 ```
 
 ### exe実行時、以下のエラーが出る場合
