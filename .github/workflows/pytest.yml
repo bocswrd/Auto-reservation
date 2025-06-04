@@ -1,0 +1,39 @@
+name: pytest
+on: 
+  pull_request:
+    paths:
+      - 'src/**'
+concurrency:
+  group: ${{ github.workflow}}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    timeout-minutes: 10
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: 'poetry'
+
+      - name: Install Poetry
+        run: |
+          export POETRY_HOME=/opt/poetry
+          python3 install-poetry.py --version 2.0.0
+          $POETRY_HOME/bin/poetry --version
+          echo "$POETRY_HOME" >> $GITHUB_PATH
+
+      - name: Install dependencies
+        run: |
+          poetry install
+
+      - name: Run tests
+        run: |
+          poetry run pytest
