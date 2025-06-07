@@ -4,8 +4,8 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-      day: "saturday"
-      time: "03:00"
+      day: "sunday"
+      time: "00:50"
       timezone: "Asia/Tokyo"
     target-branch: "develop"
     commit-message:
