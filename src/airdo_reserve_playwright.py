@@ -102,7 +102,7 @@ def reserve() -> None:
         run(playwright)
 
 
-def get_browser_executable_path():
+def get_browser_executable_path() -> str:
     """
     exe実行時に、ブラウザの実行ファイルパスを取得する関数
 

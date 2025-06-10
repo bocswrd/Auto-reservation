@@ -13,7 +13,7 @@ class FlightSelectionPage:
         self.page = page
         self.frame = self.get_target_frame()
 
-    def get_target_frame(self):
+    def get_target_frame(self) -> "playwright.sync_api.Frame":
         """
         航空券情報を取得するためのiframeを取得する
 
@@ -36,12 +36,12 @@ class FlightSelectionPage:
 
     def get_flight_prices(
         self,
-        direction_selector,
-        takeoff_hour,
-        takeoff_minute,
-        landing_hour,
-        landing_minute,
-    ):
+        direction_selector: "enums.FlightDirection",
+        takeoff_hour: int,
+        takeoff_minute: int,
+        landing_hour: int,
+        landing_minute: int,
+    ) -> dict:
         """
         フライト情報と価格を取得する
 
@@ -93,7 +93,7 @@ class FlightSelectionPage:
 
         return flight_prices
 
-    def find_cheapest_flight(self, flight_prices):
+    def find_cheapest_flight(self, flight_prices: dict) -> tuple:
         """
         最安値のフライトを探す
 
@@ -101,7 +101,7 @@ class FlightSelectionPage:
             flight_prices (dict): フライト情報と価格の辞書
 
         Returns:
-            dict: 便名と価格の辞書
+            tuple: 便名と価格の辞書
         """
         cheapest_flight = None
         cheapest_price = float("inf")
@@ -114,7 +114,9 @@ class FlightSelectionPage:
 
         return cheapest_flight, cheapest_price
 
-    def select_cheapest_flight(self, cheapest_flight, cheapest_price):
+    def select_cheapest_flight(
+        self, cheapest_flight: str, cheapest_price: int
+    ) -> None:
         """
         最安値のフライトを選択する
 
@@ -128,7 +130,7 @@ class FlightSelectionPage:
             "cell", name=f"¥{cheapest_price:,}"
         ).click()
 
-    def buy_flight(self):
+    def buy_flight(self) -> None:
         """フライトを購入する"""
         self.page.locator("#form-cart").get_by_role(
             "button", name="次へ"
