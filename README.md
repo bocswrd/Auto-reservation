@@ -51,8 +51,9 @@ source initial_setup.sh
 
 ## 使用方法
 ### 実行コマンド
+`poetry run python {実行ファイル名}.py`
 ``` bash
-poetry python main.py
+poetry run python src/main.py
 ```
 
 ### パッケージの更新
