@@ -28,7 +28,7 @@ jobs:
           export POETRY_HOME=/opt/poetry
           python3 install-poetry.py --version 2.0.0
           $POETRY_HOME/bin/poetry --version
-          echo "$POETRY_HOME" >> $GITHUB_PATH
+          echo "$POETRY_HOME/bin" >> $GITHUB_PATH
 
       - name: Install dependencies
         run: |
