@@ -3,7 +3,9 @@ import sys
 import time
 from pages.ReservationFormPage import ReservationFormPage
 from pages.FlightSelectionPage import FlightSelectionPage
+from pages.SearchPage import SearchPage
 from enums.FlightDirection import FlightDirection
+from enums.AirportCode import AirportCode
 from dotenv import load_dotenv
 from playwright.sync_api import Playwright, sync_playwright
 from datetime import datetime
@@ -24,24 +26,15 @@ def run(playwright: Playwright) -> None:
     page = context.new_page()
     try:
         # Airdoの予約サイトにアクセス
-        page.goto("https://www.airdo.jp/")
+        search_page = SearchPage(page)
+        search_page.go_to()
         # 航空券を検索
-        # 出発地・目的の選択
-        page.locator('select[name="from"]').select_option(
-            os.getenv("DEPARTURE_AIRPORT")
+        search_page.search(
+            AirportCode[os.getenv("DEPARTURE_AIRPORT")],
+            AirportCode[os.getenv("ARRIVAL_AIRPORT")],
+            datetime.fromisoformat(os.getenv("DEPARTURE_DATE")).date(),
+            datetime.fromisoformat(os.getenv("RETURN_DATE")).date(),
         )
-        page.locator('select[name="to"]').select_option(
-            os.getenv("ARRIVAL_AIRPORT")
-        )
-        # 日付指定
-        page.evaluate(
-            f"""
-            document.querySelector('input[type="hidden"][name="departureDate"]').value = '{os.getenv("DEPARTURE_DATE")}';
-            document.querySelector('input[type="hidden"][name="returnDate"]').value = '{os.getenv("RETURN_DATE")}';
-            """
-        )
-        page.get_by_role("button", name="検索する").click()
-
         # 航空券を選択する
         flight_selection_page = FlightSelectionPage(page)
         cheapest_outbound_flight = flight_selection_page.find_cheapest_flight(
