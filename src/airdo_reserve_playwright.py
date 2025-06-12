@@ -1,8 +1,11 @@
 import os
 import sys
+import time
 from pages.ReservationFormPage import ReservationFormPage
 from pages.FlightSelectionPage import FlightSelectionPage
+from pages.SearchPage import SearchPage
 from enums.FlightDirection import FlightDirection
+from enums.AirportCode import AirportCode
 from dotenv import load_dotenv
 from playwright.sync_api import Playwright, sync_playwright
 from datetime import datetime
@@ -23,24 +26,15 @@ def run(playwright: Playwright) -> None:
     page = context.new_page()
     try:
         # Airdoの予約サイトにアクセス
-        page.goto("https://www.airdo.jp/")
+        search_page = SearchPage(page)
+        search_page.go_to()
         # 航空券を検索
-        # 出発地・目的の選択
-        page.locator('select[name="from"]').select_option(
-            os.getenv("DEPARTURE_AIRPORT")
+        search_page.search(
+            AirportCode[os.getenv("DEPARTURE_AIRPORT")],
+            AirportCode[os.getenv("ARRIVAL_AIRPORT")],
+            datetime.fromisoformat(os.getenv("DEPARTURE_DATE")).date(),
+            datetime.fromisoformat(os.getenv("RETURN_DATE")).date(),
         )
-        page.locator('select[name="to"]').select_option(
-            os.getenv("ARRIVAL_AIRPORT")
-        )
-        # 日付指定
-        page.evaluate(
-            f"""
-            document.querySelector('input[type="hidden"][name="departureDate"]').value = '{os.getenv("DEPARTURE_DATE")}';
-            document.querySelector('input[type="hidden"][name="returnDate"]').value = '{os.getenv("RETURN_DATE")}';
-            """
-        )
-        page.get_by_role("button", name="検索する").click()
-
         # 航空券を選択する
         flight_selection_page = FlightSelectionPage(page)
         cheapest_outbound_flight = flight_selection_page.find_cheapest_flight(
@@ -83,12 +77,12 @@ def run(playwright: Playwright) -> None:
         reservation_form_page.submit_form()
         # 予約の確定
         page.locator("label").click()
-        page.screenshot(path="screenshot.png", full_page=True)
-        # page.get_by_role("button", name="予約する").click()
+        page.screenshot(path="screenshot/success.png", full_page=True)
+        page.get_by_role("button", name="予約する").click()
     except Exception as e:
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         page.screenshot(
-            path=f"fails-screenshot-{timestamp}.png", full_page=True
+            path=f"screenshot/fails-{datetime.now().strftime("%Y%m%d_%H%M%S")}.png",
+            full_page=True,
         )
         raise e
 
@@ -102,7 +96,7 @@ def reserve() -> None:
         run(playwright)
 
 
-def get_browser_executable_path():
+def get_browser_executable_path() -> str:
     """
     exe実行時に、ブラウザの実行ファイルパスを取得する関数
 
@@ -116,3 +110,14 @@ def get_browser_executable_path():
     else:
         # 開発環境（通常のPython実行時）
         return None  # None指定でplaywrightが通常のdriverを自動使用
+
+
+if __name__ == "__main__":
+    while True:
+        try:
+            reserve()
+            break
+        except Exception as e:
+            print(f"予約に失敗しました: {e}")
+            time.sleep(5)
+    print("予約が完了しました。")
