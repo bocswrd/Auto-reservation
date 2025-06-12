@@ -1,5 +1,6 @@
 import os
 import sys
+import time
 from pages.ReservationFormPage import ReservationFormPage
 from pages.FlightSelectionPage import FlightSelectionPage
 from enums.FlightDirection import FlightDirection
@@ -83,12 +84,12 @@ def run(playwright: Playwright) -> None:
         reservation_form_page.submit_form()
         # 予約の確定
         page.locator("label").click()
-        page.screenshot(path="screenshot.png", full_page=True)
-        # page.get_by_role("button", name="予約する").click()
+        page.screenshot(path="screenshot/success.png", full_page=True)
+        page.get_by_role("button", name="予約する").click()
     except Exception as e:
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         page.screenshot(
-            path=f"fails-screenshot-{timestamp}.png", full_page=True
+            path=f"screenshot/fails-{datetime.now().strftime("%Y%m%d_%H%M%S")}.png",
+            full_page=True,
         )
         raise e
 
@@ -116,3 +117,14 @@ def get_browser_executable_path() -> str:
     else:
         # 開発環境（通常のPython実行時）
         return None  # None指定でplaywrightが通常のdriverを自動使用
+
+
+if __name__ == "__main__":
+    while True:
+        try:
+            reserve()
+            break
+        except Exception as e:
+            print(f"予約に失敗しました: {e}")
+            time.sleep(5)
+    print("予約が完了しました。")
