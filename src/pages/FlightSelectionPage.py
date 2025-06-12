@@ -135,3 +135,12 @@ class FlightSelectionPage:
         self.page.locator("#form-cart").get_by_role(
             "button", name="次へ"
         ).click()
+
+    def __str__(self) -> str:
+        """
+        文字列化メソッド
+
+        Returns:
+            str: frame_url_idの文字列表現
+        """
+        return f"FlightSelectionPage(frame_url={self.frame.url})"
