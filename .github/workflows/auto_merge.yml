@@ -14,4 +14,4 @@ jobs:
       - id: meta
         uses: dependabot/fetch-metadata@v2
       - if: ${{ steps.meta.outputs.update-type == 'version-update:semver-patch' }}
-        run: gh pr merge "${GITHUB_HEAD_REF}" --auto --squash --delete-branch
+        run: gh pr merge "${GITHUB_HEAD_REF}" --squash --delete-branch
