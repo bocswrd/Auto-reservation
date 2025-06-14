@@ -1,5 +1,5 @@
 name: Auto merge
-on: pull_request
+on: workflow_dispatch
 jobs:
   merge:
     if: ${{ github.actor == 'dependabot[bot]' }}
@@ -14,4 +14,6 @@ jobs:
       - id: meta
         uses: dependabot/fetch-metadata@v2
       - if: ${{ steps.meta.outputs.update-type == 'version-update:semver-patch' }}
-        run: gh pr merge "${GITHUB_HEAD_REF}" --admin --squash --delete-branch
+        run: |
+          gh pr review "${GITHUB_HEAD_REF}" --approve
+          gh pr merge "${GITHUB_HEAD_REF}" --admin --squash --delete-branch
