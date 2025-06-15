@@ -16,4 +16,4 @@ jobs:
       - if: ${{ steps.meta.outputs.update-type == 'version-update:semver-patch' }}
         run: |
           gh pr review "${GITHUB_HEAD_REF}" --approve
-          gh pr merge "${GITHUB_HEAD_REF}" --squash --delete-branch --admin
+          gh pr comment "${GITHUB_HEAD_REF}" --body '@dependabot merge'
