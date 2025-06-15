@@ -6,7 +6,7 @@ class Env:
     __ENV_PATH: str = ".env"
 
     def __init__(self):
-        load_dotenv(self.__ENV_PATH, override=True)
+        load_dotenv(self.__ENV_PATH)
 
     @classmethod
     def parse_boolean(cls, key: str) -> bool:
