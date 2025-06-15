@@ -16,6 +16,7 @@ def playwright_instance():
 @patch.dict(
     os.environ,
     {
+        "EXECUTE_RESERVATION": "false",
         "DEPARTURE_AIRPORT": "HND",
         "ARRIVAL_AIRPORT": "SPK",
         "DEPARTURE_DATE": "2025-07-10",
