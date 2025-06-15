@@ -11,8 +11,6 @@ from dotenv import load_dotenv
 from playwright.sync_api import Playwright, sync_playwright
 from datetime import datetime
 
-env_config = EnvConfig()
-
 
 def run(playwright: Playwright) -> None:
     """
@@ -21,6 +19,7 @@ def run(playwright: Playwright) -> None:
     Args:
         playwright (Playwright): Playwrightのインスタンス
     """
+    env_config = EnvConfig()
     browser = playwright.chromium.launch(
         headless=True,
         executable_path=get_browser_executable_path(),
