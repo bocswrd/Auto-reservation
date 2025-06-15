@@ -6,9 +6,12 @@ from pages.FlightSelectionPage import FlightSelectionPage
 from pages.SearchPage import SearchPage
 from enums.FlightDirection import FlightDirection
 from enums.AirportCode import AirportCode
+from config.EnvConfig import EnvConfig
 from dotenv import load_dotenv
 from playwright.sync_api import Playwright, sync_playwright
 from datetime import datetime
+
+env_config = EnvConfig()
 
 
 def run(playwright: Playwright) -> None:
@@ -78,7 +81,8 @@ def run(playwright: Playwright) -> None:
         # 予約の確定
         page.locator("label").click()
         page.screenshot(path="screenshot/success.png", full_page=True)
-        page.get_by_role("button", name="予約する").click()
+        if env_config.is_execute_reservation:
+            page.get_by_role("button", name="予約する").click()
     except Exception as e:
         page.screenshot(
             path=f"screenshot/fails-{datetime.now().strftime("%Y%m%d_%H%M%S")}.png",
