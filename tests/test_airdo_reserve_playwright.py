@@ -16,13 +16,14 @@ def playwright_instance():
 @patch.dict(
     os.environ,
     {
+        "EXECUTE_RESERVATION": "false",
         "DEPARTURE_AIRPORT": "HND",
         "ARRIVAL_AIRPORT": "SPK",
-        "DEPARTURE_DATE": "2025-07-10",
-        "RETURN_DATE": "2025-07-15",
-        "OUTBOUND_TAKEOFF_HOUR": "6",
+        "DEPARTURE_DATE": "2025-10-14",
+        "RETURN_DATE": "2025-10-15",
+        "OUTBOUND_TAKEOFF_HOUR": "18",
         "OUTBOUND_TAKEOFF_MINUTE": "0",
-        "OUTBOUND_LANDING_HOUR": "8",
+        "OUTBOUND_LANDING_HOUR": "20",
         "OUTBOUND_LANDING_MINUTE": "30",
         "RETURN_TAKEOFF_HOUR": "18",
         "RETURN_TAKEOFF_MINUTE": "0",
