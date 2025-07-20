@@ -1,6 +1,7 @@
 import re
-from playwright.sync_api import Page
+from playwright.sync_api import Page, Frame
 from datetime import datetime, time
+from src.enums import FlightDirection
 
 
 class FlightSelectionPage:
@@ -13,7 +14,7 @@ class FlightSelectionPage:
         self.page = page
         self.frame = self.get_target_frame()
 
-    def get_target_frame(self) -> "playwright.sync_api.Frame":
+    def get_target_frame(self) -> Frame:
         """
         航空券情報を取得するためのiframeを取得する
 
@@ -36,7 +37,7 @@ class FlightSelectionPage:
 
     def get_flight_prices(
         self,
-        direction_selector: "enums.FlightDirection",
+        direction_selector: FlightDirection,
         takeoff_hour: int,
         takeoff_minute: int,
         landing_hour: int,

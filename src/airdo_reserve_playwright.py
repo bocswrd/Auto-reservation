@@ -1,9 +1,9 @@
 import os
 import sys
 import time
-from pages.ReservationFormPage import ReservationFormPage
-from pages.FlightSelectionPage import FlightSelectionPage
-from pages.SearchPage import SearchPage
+from pages.airdo.ReservationFormPage import ReservationFormPage
+from pages.airdo.FlightSelectionPage import FlightSelectionPage
+from pages.airdo.SearchPage import SearchPage
 from enums.FlightDirection import FlightDirection
 from enums.AirportCode import AirportCode
 from config.EnvConfig import EnvConfig
