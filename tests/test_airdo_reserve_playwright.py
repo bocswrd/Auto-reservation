@@ -1,15 +1,7 @@
 import os
 import pytest
 from unittest.mock import patch
-from playwright.sync_api import sync_playwright
-from airdo_reserve_playwright import run
-
-
-@pytest.fixture(scope="module")
-def playwright_instance():
-    """Playwrightのインスタンスをセットアップ"""
-    with sync_playwright() as playwright:
-        yield playwright
+from src.airdo_reserve_playwright import run
 
 
 @patch("dotenv.load_dotenv", lambda: None)
@@ -19,8 +11,8 @@ def playwright_instance():
         "EXECUTE_RESERVATION": "false",
         "DEPARTURE_AIRPORT": "HND",
         "ARRIVAL_AIRPORT": "SPK",
-        "DEPARTURE_DATE": "2025-10-14",
-        "RETURN_DATE": "2025-10-15",
+        "DEPARTURE_DATE": "2025-10-21",
+        "RETURN_DATE": "2025-10-22",
         "OUTBOUND_TAKEOFF_HOUR": "18",
         "OUTBOUND_TAKEOFF_MINUTE": "0",
         "OUTBOUND_LANDING_HOUR": "20",
@@ -37,9 +29,9 @@ def playwright_instance():
     },
     clear=True,
 )
-def test_airdo_reserve(playwright_instance):
+def test_airdo_reserve(page):
     """AirDo予約フローのテスト"""
     try:
-        run(playwright_instance)
+        run(page)
     except Exception as e:
         pytest.fail(f"Test failed with exception: {e}")
