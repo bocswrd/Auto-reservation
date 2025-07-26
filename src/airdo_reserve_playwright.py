@@ -1,18 +1,20 @@
 import os
 import sys
 import time
-from pages.ReservationFormPage import ReservationFormPage
-from pages.FlightSelectionPage import FlightSelectionPage
-from pages.SearchPage import SearchPage
+from src.pages.airdo.reservation_form_page import ReservationFormPage
+from src.pages.airdo.flight_selection_page import FlightSelectionPage
+from src.pages.airdo.search_page import SearchPage
+from src.utils.screenshot_manager import ScreenshotManager
+from src.utils.driver_manager import DriverManager
 from enums.FlightDirection import FlightDirection
 from enums.AirportCode import AirportCode
 from config.EnvConfig import EnvConfig
 from dotenv import load_dotenv
-from playwright.sync_api import Playwright, sync_playwright
+from playwright.sync_api import sync_playwright, Page
 from datetime import datetime
 
 
-def run(playwright: Playwright) -> None:
+def run(page: Page) -> None:
     """
     Playwrightを使用して、AirDoの予約サイトにアクセスし、航空券を予約する関数
 
@@ -20,12 +22,8 @@ def run(playwright: Playwright) -> None:
         playwright (Playwright): Playwrightのインスタンス
     """
     env_config = EnvConfig()
-    browser = playwright.chromium.launch(
-        headless=True,
-        executable_path=get_browser_executable_path(),
-    )
-    context = browser.new_context()
-    page = context.new_page()
+    screenshot_manager = ScreenshotManager(page, True)
+
     try:
         # Airdoの予約サイトにアクセス
         search_page = SearchPage(page)
@@ -79,13 +77,12 @@ def run(playwright: Playwright) -> None:
         reservation_form_page.submit_form()
         # 予約の確定
         page.locator("label").click()
-        page.screenshot(path="screenshot/success.png", full_page=True)
+        screenshot_manager.save_screenshot("screenshot/reservation_form.png")
         if env_config.is_execute_reservation:
             page.get_by_role("button", name="予約する").click()
     except Exception as e:
-        page.screenshot(
-            path=f"screenshot/fails-{datetime.now().strftime("%Y%m%d_%H%M%S")}.png",
-            full_page=True,
+        screenshot_manager.save_screenshot(
+            f"screenshot/fails-{datetime.now().strftime("%Y%m%d_%H%M%S")}.png",
         )
         raise e
 
@@ -94,9 +91,13 @@ def reserve() -> None:
     """
     予約を実行する関数
     """
-    load_dotenv(override=True)
     with sync_playwright() as playwright:
-        run(playwright)
+        page = DriverManager(
+            playwright,
+            headless=False,
+            executable_path=get_browser_executable_path(),
+        ).launch()
+        run(page)
 
 
 def get_browser_executable_path() -> str:
@@ -118,6 +119,7 @@ def get_browser_executable_path() -> str:
 if __name__ == "__main__":
     while True:
         try:
+            load_dotenv(override=True)
             reserve()
             break
         except Exception as e:
