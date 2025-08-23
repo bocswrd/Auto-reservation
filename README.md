@@ -68,13 +68,24 @@ Playwright codegen {操作対象URL} -o {出力ファイル名.py}
 
 ### テスト実行(pytest)
 ``` bash
-poetry pytest {実行ファイル名}.py
+poetry run pytest {実行ファイル名}.py
 ```
 
 ### exeファイルのビルド
 ``` bash
 ./build.sh
 ```
+
+### pytestのオプションのヘルプ
+``` bash
+poetry run pytest -h
+```
+
+### パッケージの追加
+``` bash
+poetry add package_name
+```
+
 
 ## 構成
 
