@@ -1,7 +1,7 @@
 import re
 from playwright.sync_api import Page, Frame
 from datetime import datetime, time
-from src.enums import FlightDirection
+from enums import FlightDirection
 
 
 class FlightSelectionPage:

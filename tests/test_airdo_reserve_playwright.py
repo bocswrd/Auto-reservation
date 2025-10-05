@@ -1,7 +1,7 @@
 import os
 import pytest
 from unittest.mock import patch
-from src.airdo_reserve_playwright import run
+from airdo_reserve_playwright import run
 
 
 @patch("dotenv.load_dotenv", lambda: None)
