@@ -5,13 +5,23 @@ from enums import FlightDirection
 
 
 class FlightSelectionPage:
+    """
+    航空券選択ページのクラス
+
+    Attributes:
+        __FRAME_URL_ID (str): iframeのURLの一部
+        outward_flight_selector (str): 往路のフライトセレクター
+        homeward_flight_selector (str): 復路のフライトセレクター
+        __page (Page): PlaywrightのPageオブジェクト
+        frame (Frame): 航空券情報を取得するためのiframe
+    """
 
     __FRAME_URL_ID = "select.html"
     outward_flight_selector = "#anc-s1"
     homeward_flight_selector = "#anc-s2"
 
     def __init__(self, page: Page):
-        self.page = page
+        self.__page = page
         self.frame = self.get_target_frame()
 
     def get_target_frame(self) -> Frame:
@@ -25,7 +35,7 @@ class FlightSelectionPage:
         Returns:
             _type_: 航空券情報を取得するためのiframe
         """
-        frames = self.page.frames
+        frames = self.__page.frames
         if len(frames) == 0:
             raise Exception("No frames found")
 
@@ -126,14 +136,14 @@ class FlightSelectionPage:
                 cheapest_price (int): 最安値の価格
         """
         # HACK: 便名を指定する必要がある
-        self.page.wait_for_selector(f"text=¥{cheapest_price:,}")
-        self.page.get_by_role("row", name=cheapest_flight).get_by_role(
+        self.__page.wait_for_selector(f"text=¥{cheapest_price:,}")
+        self.__page.get_by_role("row", name=cheapest_flight).get_by_role(
             "cell", name=f"¥{cheapest_price:,}"
         ).click()
 
     def buy_flight(self) -> None:
         """フライトを購入する"""
-        self.page.locator("#form-cart").get_by_role(
+        self.__page.locator("#form-cart").get_by_role(
             "button", name="次へ"
         ).click()
 
