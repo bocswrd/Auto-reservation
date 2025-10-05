@@ -45,6 +45,7 @@ class FlightSelectionPage:
 
         raise Exception("No target frame found")
 
+    # HACK: 引数をtimeにしたい
     def get_flight_prices(
         self,
         direction_selector: FlightDirection,
@@ -62,6 +63,8 @@ class FlightSelectionPage:
         Returns:
             dict: フライト情報と価格の辞書
         """
+        # HACK: tabを指定できるようにする
+        self.select_tab('DOバリュー')
         outward_flight = self.frame.wait_for_selector(direction_selector.value)
         outward_flight_DoValue = outward_flight.wait_for_selector(
             "div.tab-content.current"
@@ -140,6 +143,16 @@ class FlightSelectionPage:
         self.__page.get_by_role("row", name=cheapest_flight).get_by_role(
             "cell", name=f"¥{cheapest_price:,}"
         ).click()
+
+    def select_tab(self, tab_name:str) -> None:
+        """
+        往路・復路のタブを切り替える
+        Args:
+            tab_name (str): タブ名
+        """
+        links = self.__page.get_by_role('link', name=tab_name, exact=True).all()
+        for link in links:
+            link.click()
 
     def buy_flight(self) -> None:
         """フライトを購入する"""
