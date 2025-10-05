@@ -1,11 +1,10 @@
 import os
 import sys
-import time
-from src.pages.airdo.reservation_form_page import ReservationFormPage
-from src.pages.airdo.flight_selection_page import FlightSelectionPage
-from src.pages.airdo.search_page import SearchPage
-from src.utils.screenshot_manager import ScreenshotManager
-from src.utils.driver_manager import DriverManager
+from pages.airdo.reservation_form_page import ReservationFormPage
+from pages.airdo.flight_selection_page import FlightSelectionPage
+from pages.airdo.search_page import SearchPage
+from utils.screenshot_manager import ScreenshotManager
+from utils.driver_manager import DriverManager
 from enums.FlightDirection import FlightDirection
 from enums.AirportCode import AirportCode
 from config.EnvConfig import EnvConfig
