@@ -1,16 +1,20 @@
 import os
 import sys
+import logging
+from datetime import datetime
 from pages.airdo.reservation_form_page import ReservationFormPage
 from pages.airdo.flight_selection_page import FlightSelectionPage
 from pages.airdo.search_page import SearchPage
 from utils.screenshot_manager import ScreenshotManager
 from utils.driver_manager import DriverManager
+from utils.retry import retry
 from enums.FlightDirection import FlightDirection
 from enums.AirportCode import AirportCode
 from config.EnvConfig import EnvConfig
 from dotenv import load_dotenv
 from playwright.sync_api import sync_playwright, Page
-from datetime import datetime
+
+handler = logging.StreamHandler(sys.stdout)
 
 
 def run(page: Page) -> None:
@@ -79,7 +83,7 @@ def run(page: Page) -> None:
         screenshot_manager.save_screenshot("screenshot/reservation_form.png")
         if env_config.is_execute_reservation:
             page.get_by_role("button", name="予約する").click()
-    except Exception as e:
+    except TimeoutError as e:
         screenshot_manager.save_screenshot(
             f"screenshot/fails-{datetime.now().strftime("%Y%m%d_%H%M%S")}.png",
         )
@@ -93,7 +97,7 @@ def reserve() -> None:
     with sync_playwright() as playwright:
         page = DriverManager(
             playwright,
-            headless=False,
+            headless=True,
             executable_path=get_browser_executable_path(),
         ).launch()
         run(page)
@@ -116,12 +120,6 @@ def get_browser_executable_path() -> str:
 
 
 if __name__ == "__main__":
-    while True:
-        try:
-            load_dotenv(override=True)
-            reserve()
-            break
-        except Exception as e:
-            print(f"予約に失敗しました: {e}")
-            time.sleep(5)
+    load_dotenv(override=True)
+    retry(reserve)
     print("予約が完了しました。")
