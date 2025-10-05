@@ -15,8 +15,6 @@ class DriverManager:
         self.playwright = playwright
         self.headless = headless
         self.executable_path = executable_path
-        self.browser = None
-        self.context = None
 
     def launch(self):
         """
