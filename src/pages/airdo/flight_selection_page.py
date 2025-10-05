@@ -5,13 +5,23 @@ from enums import FlightDirection
 
 
 class FlightSelectionPage:
+    """
+    航空券選択ページのクラス
+
+    Attributes:
+        __FRAME_URL_ID (str): iframeのURLの一部
+        outward_flight_selector (str): 往路のフライトセレクター
+        homeward_flight_selector (str): 復路のフライトセレクター
+        __page (Page): PlaywrightのPageオブジェクト
+        frame (Frame): 航空券情報を取得するためのiframe
+    """
 
     __FRAME_URL_ID = "select.html"
     outward_flight_selector = "#anc-s1"
     homeward_flight_selector = "#anc-s2"
 
     def __init__(self, page: Page):
-        self.page = page
+        self.__page = page
         self.frame = self.get_target_frame()
 
     def get_target_frame(self) -> Frame:
@@ -25,7 +35,7 @@ class FlightSelectionPage:
         Returns:
             _type_: 航空券情報を取得するためのiframe
         """
-        frames = self.page.frames
+        frames = self.__page.frames
         if len(frames) == 0:
             raise Exception("No frames found")
 
@@ -35,6 +45,7 @@ class FlightSelectionPage:
 
         raise Exception("No target frame found")
 
+    # HACK: 引数をtimeにしたい
     def get_flight_prices(
         self,
         direction_selector: FlightDirection,
@@ -52,6 +63,8 @@ class FlightSelectionPage:
         Returns:
             dict: フライト情報と価格の辞書
         """
+        # HACK: tabを指定できるようにする
+        self.select_tab('DOバリュー')
         outward_flight = self.frame.wait_for_selector(direction_selector.value)
         outward_flight_DoValue = outward_flight.wait_for_selector(
             "div.tab-content.current"
@@ -126,14 +139,24 @@ class FlightSelectionPage:
                 cheapest_price (int): 最安値の価格
         """
         # HACK: 便名を指定する必要がある
-        self.page.wait_for_selector(f"text=¥{cheapest_price:,}")
-        self.page.get_by_role("row", name=cheapest_flight).get_by_role(
+        self.__page.wait_for_selector(f"text=¥{cheapest_price:,}")
+        self.__page.get_by_role("row", name=cheapest_flight).get_by_role(
             "cell", name=f"¥{cheapest_price:,}"
         ).click()
 
+    def select_tab(self, tab_name:str) -> None:
+        """
+        往路・復路のタブを切り替える
+        Args:
+            tab_name (str): タブ名
+        """
+        links = self.__page.get_by_role('link', name=tab_name, exact=True).all()
+        for link in links:
+            link.click()
+
     def buy_flight(self) -> None:
         """フライトを購入する"""
-        self.page.locator("#form-cart").get_by_role(
+        self.__page.locator("#form-cart").get_by_role(
             "button", name="次へ"
         ).click()
 

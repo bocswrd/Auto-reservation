@@ -2,9 +2,16 @@ from playwright.sync_api import Page
 
 
 class ReservationFormPage:
+    """
+    予約フォームページのクラス
+    Attributes:
+        __page (Page): PlaywrightのPageオブジェクト
+        AGE_INPUT (str): 年齢入力フィールドのセレクター
+        EMAIL_INPUT (str): メールアドレス入力フィールドのセレクター
+    """
+    
     def __init__(self, page: Page):
-        # TODO: ガード節
-        self.page = page
+        self.__page = page
 
     # Locators
     AGE_INPUT = "#age-1"
@@ -40,8 +47,8 @@ class ReservationFormPage:
             last_name (str): 姓
             first_name (str): 名
         """
-        self.page.get_by_role("textbox", name="例）サトウ").fill(last_name)
-        self.page.get_by_role("textbox", name="例）イチロウ").fill(first_name)
+        self.__page.get_by_role("textbox", name="例）サトウ").fill(last_name)
+        self.__page.get_by_role("textbox", name="例）イチロウ").fill(first_name)
 
     def enter_age(self, age: str) -> None:
         """
@@ -49,7 +56,7 @@ class ReservationFormPage:
         Args:
             age (str): 年齢
         """
-        self.page.fill(self.AGE_INPUT, age)
+        self.__page.fill(self.AGE_INPUT, age)
 
     def enter_email(self, email: str) -> None:
         """
@@ -58,11 +65,11 @@ class ReservationFormPage:
         Args:
             email (str): メールアドレス
         """
-        self.page.get_by_role("textbox", name="例）sample@airdo.jp").fill(
+        self.__page.get_by_role("textbox", name="例）sample@airdo.jp").fill(
             email
         )
         # 確認用メールアドレスも同じ値を入力する
-        self.page.fill(self.EMAIL_INPUT, email)
+        self.__page.fill(self.EMAIL_INPUT, email)
 
     def enter_phone_number(self, phone_number: str) -> None:
         """
@@ -71,7 +78,7 @@ class ReservationFormPage:
         Args:
             phone_number (str): 電話番号
         """
-        self.page.get_by_role("textbox", name="例）09012345678").fill(
+        self.__page.get_by_role("textbox", name="例）09012345678").fill(
             phone_number
         )
 
@@ -80,4 +87,4 @@ class ReservationFormPage:
         フォームを送信する
         予約確認画面に遷移する
         """
-        self.page.get_by_role("button", name="確認画面に進む").click()
+        self.__page.get_by_role("button", name="確認画面に進む").click()
