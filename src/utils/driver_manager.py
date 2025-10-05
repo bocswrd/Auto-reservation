@@ -1,5 +1,4 @@
 from playwright.sync_api import Playwright
-from contextlib import contextmanager
 
 
 class DriverManager:
@@ -19,7 +18,6 @@ class DriverManager:
         self.browser = None
         self.context = None
 
-    @contextmanager
     def launch(self):
         """
         ブラウザを起動し、コンテキストとページを作成する
@@ -44,8 +42,4 @@ class DriverManager:
             locale="ja-JP",
             timezone_id="Asia/Tokyo",
         )
-        try:
-            yield self.context.new_page()
-        finally:
-            self.context.close()
-            self.browser.close()
+        return  self.context.new_page()
